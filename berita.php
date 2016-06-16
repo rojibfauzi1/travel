@@ -1,0 +1,105 @@
+<?php 
+require_once('conf/koneksi.php');
+include 'asset/php/head.php'; ?>
+	<body>
+<!--==============================header=================================-->
+		<?php include 'asset/php/header.php'; ?>
+<!--==============================Content=================================-->
+		<div class="content"><div class="ic">More Website Templates @ TemplateMonster.com - February 10, 2014!</div>
+			<div class="container_12">
+			
+				<div class="grid_8">
+					<h3>Berita</h3>
+					<?php
+			 $limit = 4;
+            $jumlah_record = $conn->query("SELECT * from berita");
+            $jml = $jumlah_record->num_rows;
+            $halaman = ceil($jml / $limit);
+            $page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
+
+            $start = ($page - 1) * $limit;
+
+			$sql = $conn->query("SELECT * FROM berita order by tanggal desc limit $start,$limit");
+			while($data = $sql->fetch_assoc()){
+			
+			?>
+					<div class="block2">
+						<img width="100px" height="100px" src="upload/berita/<?php echo $data['gambar'] ?>"  alt="" class="img_inner fleft">
+						<div class="extra_wrapper">
+							<div class="text1 col1"><a href="#"><?php echo $data['tempat_wisata'] ?></a></div>
+							<p><?php echo substr($data['deskripsi'], 0,300) ?></p>
+							<p>Pengirim : <?php echo $data['pengirim'] ?></p>
+							<br>
+							<a href="detail_berita.php?detail=<?php echo $data['id_berita'] ?>" class="link1">LEARN MORE</a>
+						</div>
+					</div>
+			<?php } ?>
+
+				</div>
+
+				<div class="grid_3 prefix_1">
+					<h5>Kategori Paket</h5>
+			<?php
+					$sql = $conn->query("SELECT * FROM kategori order by id_kategori asc limit 0,12");
+					
+					while($data = $sql->fetch_assoc()){
+
+				?>
+					<ul class="list">
+						<li><a href="detail_kategori.php?detail=<?php echo $data['id_kategori'] ?>"><?php echo $data['nama_kategori'] ?></a></li>
+				
+					</ul>
+					<?php  } ?>
+					<a href="#" class="link1">VIEW A<span class="low">ll</span></a>
+				</div>
+		 
+			</div>
+<div class="paging">
+            <?php
+            if($page > 1){
+
+            ?>
+            <a href="?page=<?php echo $page - 1 ?>"><</a>
+            <?php
+            for($x=1;$x<=$halaman;$x++){
+            ?>
+              <a href="?page=<?php echo $x ?>"><?php echo $x ?></a>
+            <?php
+              }
+            }elseif($page==1){
+              for($x=1;$x<=$halaman;$x++){
+              ?>
+              <a href="?page=<?php echo $x ?>"><?php echo $x ?></a>
+            <?php
+            }
+            ?>
+            <a href="?page=<?php echo $page +1 ?>">></a>
+           <?php } ?> 
+          </div>
+        <br class="clear" />
+      </div>
+		</div>
+<!--==============================footer=================================-->
+		<footer>
+			<div class="container_12">
+				<div class="grid_12">
+					<div class="socials">
+						<a href="#" class="fa fa-facebook"></a>
+						<a href="#" class="fa fa-twitter"></a>
+						<a href="#" class="fa fa-google-plus"></a>
+					</div>
+					<div class="copy">
+						Your Trip (c) 2014 | <a href="#">Privacy Policy</a> | Website Template Designed by TemplateMonster.com
+					</div>
+				</div>
+			</div>
+		</footer>
+		<script>
+		$(function (){
+			$('#bookingForm').bookingForm({
+				ownerEmail: '#'
+			});
+		})
+		</script>
+	</body>
+</html>
